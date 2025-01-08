@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Gemini</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .chat-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        .messages {
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
+        .message {
+            margin: 5px 0;
+        }
+        .user-message {
+            text-align: right;
+            color: #007bff;
+        }
+        .bot-message {
+            text-align: left;
+            color: #28a745;
+        }
+        .error-message {
+            text-align: center;
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .input-container {
+            display: flex;
+            margin-top: 10px;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <h2>Chatbot Gemini</h2>
+        <div class="messages" id="messages"></div>
+        <div class="input-container">
+            <input type="text" id="userInput" placeholder="Tapez votre message ici...">
+            <button onclick="sendMessage()">Envoyer</button>
+        </div>
+    </div>
+
+    <script>
+        function sendMessage() {
+            const userInput = document.getElementById("userInput").value.trim();
+            const messages = document.getElementById("messages");
+
+            if (!userInput) {
+                alert("Veuillez entrer un message !");
+                return;
+            }
+
+            // Afficher le message de l'utilisateur
+            const userMessage = document.createElement("div");
+            userMessage.className = "message user-message";
+            userMessage.textContent = userInput;
+            messages.appendChild(userMessage);
+
+            // Appeler le backend
+            fetch("chatbot.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: userInput })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const botMessage = document.createElement("div");
+                botMessage.className = "message bot-message";
+                botMessage.textContent = data.response || "Réponse inattendue du serveur.";
+                messages.appendChild(botMessage);
+
+                // Défiler automatiquement vers le bas
+                messages.scrollTop = messages.scrollHeight;
+            })
+            .catch(error => {
+                const errorMessage = document.createElement("div");
+                errorMessage.className = "message error-message";
+                errorMessage.textContent = "Erreur de connexion. Veuillez réessayer.";
+                messages.appendChild(errorMessage);
+                console.error("Erreur :", error);
+            });
+
+            document.getElementById("userInput").value = ""; // Réinitialiser l'entrée
+        }
+    </script>
+</body>
+</html>

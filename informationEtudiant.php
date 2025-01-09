@@ -116,7 +116,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'download_pdf') {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <title>Liste des Étudiants</title>
+    <title>Carte de l'étudiant</title>
     <title>Détails de l'Étudiant</title>
     <style>
         body {

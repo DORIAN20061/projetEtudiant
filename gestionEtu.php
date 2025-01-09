@@ -266,7 +266,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
         }
 
         img {
-            max-width: 50px;
+            max-width: 24px;
             max-height: 50px;
             object-fit: cover;
             border-radius: 50px;
@@ -446,7 +446,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
                                 <td><?= htmlspecialchars($etudiant['montant']); ?></td>
                                 <td><?= htmlspecialchars($etudiant['nom_parent']); ?></td>
                                 <td class="actions">
-                                    <button class="edit" onclick="location.href='edit.php?id=<?= $etudiant['id']; ?>'"><img src="uploads/write.png" alt=""></button>
+                                    <button class="edit" onclick="location.href='edit.php?id=<?= $etudiant['id']; ?>'"><img src="uploads/stylo.png" alt=""></button>
                                     <button class="delete" onclick="openPopup(<?= $etudiant['id']; ?>)"><img src="uploads/delete.png" alt=""></button>
                                     <button class="details" onclick="location.href='informationEtudiant.php?id=<?= $etudiant['id']; ?>'"><img src="uploads/info.png" alt=""></button>
                                 </td>

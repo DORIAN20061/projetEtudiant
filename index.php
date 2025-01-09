@@ -11,34 +11,31 @@ $message = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $matricule = trim($_POST['matricule'] ?? '');
     $password = trim($_POST['password'] ?? '');
-    $statut = trim($_POST['statut'] ?? '');
 
-    if ($statut === "Etudiant") {
-        // Vérifier les informations de connexion pour un étudiant
-        $etudiant = $etudiantObj->verifierConnexion($matricule, $password);
-        if ($etudiant) {
-            if ($matricule === $password) {
-                // Rediriger vers la page de modification du mot de passe
-                header("Location: etudiant/modifierPass.php?matricule=" . urlencode($etudiant['matricule']));
-                exit();
-            } else {
-                // Rediriger vers la page d'information de l'étudiant
-                header("Location: informationEtudiant.php?matricule=" . urlencode($etudiant['matricule']));
-                exit();
-            }
-        } else {
-            $message = "Matricule ou mot de passe incorrect.";
-        }
-    } elseif ($statut === "Admin") {
-        // Vérifier les informations de connexion pour un admin
-        if ($matricule === "Admin" && $password === "admin") {
+    if (!empty($matricule) && !empty($password)) {
+        if ($matricule === 'Admin' && $password === 'admin') {
+            // Rediriger l'administrateur vers la page de gestion des étudiants
             header("Location: gestionEtu.php");
             exit();
         } else {
-            $message = "Matricule ou mot de passe incorrect pour l'administrateur.";
+            // Vérifier les informations de connexion pour un étudiant
+            $etudiant = $etudiantObj->verifierConnexion($matricule, $password);
+            if ($etudiant) {
+                if ($etudiant['first_login'] == 1) {
+                    // Rediriger vers la page de modification du mot de passe
+                    header("Location: etudiant/modifierPass.php?matricule=" . urlencode($etudiant['matricule']));
+                    exit();
+                } else {
+                    // Rediriger vers la page d'information de l'étudiant
+                    header("Location: informationEtudiant.php?matricule=" . urlencode($etudiant['matricule']));
+                    exit();
+                }
+            } else {
+                $message = "Matricule ou mot de passe incorrect.";
+            }
         }
     } else {
-        $message = "Statut invalide. Veuillez réessayer.";
+        $message = "Veuillez remplir tous les champs.";
     }
 }
 
@@ -240,11 +237,6 @@ function afficherMessage($message)
             </div>
         <?php endif; ?>
         <form method="POST" action="">
-            <select id="statut" name="statut" required>
-                <option value="">-- Sélectionnez le statut --</option>
-                <option value="Admin">Admin</option>
-                <option value="Etudiant">Étudiant</option>
-            </select>
             <input type="text" name="matricule" placeholder="Matricule" required>
             <input type="password" name="password" placeholder="Mot de passe" required>
             <button type="submit">Se connecter</button>

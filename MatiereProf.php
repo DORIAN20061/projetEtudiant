@@ -135,6 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
             transition: ease-in-out .5s;
             box-shadow: 0 5px 15px rgba(102, 166, 255, 0.5);
         }
+
         .sidebar .etu {
             background: linear-gradient(135deg, #74ebd5, #ACB6E5);
         }
@@ -410,20 +411,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
         }
 
         .logout {
-    background-color: #f44336; /* Couleur rouge pour le bouton de déconnexion */
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-    border-radius: 28px;
-    font-size: 16px;
-    transition: background-color 0.3s;
-}
+            background-color: #f44336;
+            /* Couleur rouge pour le bouton de déconnexion */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 28px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
 
-.logout:hover {
-    background-color: #d32f2f; /* Couleur plus foncée au survol */
-}
-
+        .logout:hover {
+            background-color: #d32f2f;
+            /* Couleur plus foncée au survol */
+        }
     </style>
 </head>
 
@@ -453,66 +455,66 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
     </div> -->
 
     <!-- Main Content -->
-<div class="content">
-    <div class="header">
-        <div class="haut">
-            <h2>Liste des Matieres</h2>
-            
+    <div class="content">
+        <div class="header">
+            <div class="haut">
+                <h2>Liste des Matieres</h2>
+
+            </div>
+            <form method="GET" action="gestionVer.php">
+                <input name="search" type="text" placeholder="Rechercher..." value="<?= htmlspecialchars($search); ?>">
+                <button type="submit">Rechercher</button>
+            </form>
         </div>
-        <form method="GET" action="gestionVer.php">
-            <input name="search" type="text" placeholder="Rechercher..." value="<?= htmlspecialchars($search); ?>">
-            <button type="submit">Rechercher</button>
-        </form>
-    </div>
 
-    <?php if (!empty($message)): ?>
-        <p style="color: green;"> <?= htmlspecialchars($message); ?> </p>
-    <?php endif; ?>
+        <?php if (!empty($message)): ?>
+            <p style="color: green;"> <?= htmlspecialchars($message); ?> </p>
+        <?php endif; ?>
 
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Matricule Professeur</th>
-                    <th>Nom professeur</th>
-                    <th>Nom de Matiere</th>
-                    <th>Niveau Matiere</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if (!empty($matieres)): ?>
-                    <?php foreach ($matieres as $matiere): ?>
-                        <tr>
-                            <td><?= htmlspecialchars($matiere['id']); ?></td>
-                            <td><?= htmlspecialchars($matiere['matricule_prof']); ?></td>
-                            <td><?= htmlspecialchars($matiere['nom_prof']); ?></td>
-                            <td><?= str_replace('_',' ',htmlspecialchars($matiere['nom_matiere'])); ?></td>
-                            <td><?= htmlspecialchars($matiere['niveau_matiere']); ?></td>
-                            <td class="actions">
-                                <button class="edit" onclick="location.href='edit.php?id=<?= $matiere['id']; ?>'">
-                                    <img src="uploads/write.png" alt="Modifier">
-                                </button>
-                                <button class="delete" onclick="openPopup(<?= $matiere['id']; ?>)">
-                                    <img src="uploads/delete.png" alt="Supprimer">
-                                </button>
-                                <button class="details" onclick="location.href='AjouterNotes.php?niveau=<?= $matiere['niveau_matiere']; ?>&&matiere=<?= $matiere['nom_matiere']; ?>'">
-                                    Ajouter Notes<!-- <img src="uploads/info.png" alt="Détails"> -->
-                                </button>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
+        <div class="table-container">
+            <table>
+                <thead>
                     <tr>
-                        <td colspan="6">Aucune matière trouvée.</td>
+                        <th>ID</th>
+                        <th>Matricule Professeur</th>
+                        <th>Nom professeur</th>
+                        <th>Nom de Matiere</th>
+                        <th>Niveau Matiere</th>
+                        <th>Action</th>
                     </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php if (!empty($matieres)): ?>
+                        <?php foreach ($matieres as $matiere): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($matiere['id']); ?></td>
+                                <td><?= htmlspecialchars($matiere['matricule_prof']); ?></td>
+                                <td><?= htmlspecialchars($matiere['nom_prof']); ?></td>
+                                <td><?= str_replace('_', ' ', htmlspecialchars($matiere['nom_matiere'])); ?></td>
+                                <td><?= htmlspecialchars($matiere['niveau_matiere']); ?></td>
+                                <td class="actions">
+                                    <button class="edit" onclick="location.href='edit.php?id=<?= $matiere['id']; ?>'">
+                                        <img src="uploads/write.png" alt="Modifier">
+                                    </button>
+                                    <button class="delete" onclick="openPopup(<?= $matiere['id']; ?>)">
+                                        <img src="uploads/delete.png" alt="Supprimer">
+                                    </button>
+                                    <button class="details" onclick="location.href='AjouterNotes.php?niveau=<?= $matiere['niveau_matiere']; ?>&&matiere=<?= $matiere['nom_matiere']; ?>'">
+                                        Ajouter Notes<!-- <img src="uploads/info.png" alt="Détails"> -->
+                                    </button>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="6">Aucune matière trouvée.</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
-<button class="logout" onclick="location.href='logout.php'">Déconnexion</button>
+    <button class="logout" onclick="location.href='logout.php'">Déconnexion</button>
 
     <!-- Popup -->
     <div id="popup" class="popup-overlay" style="display: none;">

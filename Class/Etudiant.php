@@ -20,8 +20,6 @@ class Etudiant
     public $email;
     public $niveau;
     public $montant;
-    public $nom_parent;
-    public $email_parent;
     public $age;
     public $reste;
     public $montant_paye;
@@ -38,8 +36,8 @@ class Etudiant
     public function ajouterEtudiant()
     {
         $query = "INSERT INTO " . $this->table . " 
-                  (nom, prenom, matricule, photo, email, niveau, montant, nom_parent, email_parent, age,montant_paye, reste, statut, date_naissance) 
-                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                  (nom, prenom, matricule, photo, email, niveau, montant, age, montant_paye, reste, statut, date_naissance) 
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         $stmt = $this->conn->prepare($query);
 
@@ -50,7 +48,7 @@ class Etudiant
 
         // Liaison des paramètres
         $stmt->bind_param(
-            "ssssssdssiddss",
+            "ssssssdiddss",
             $this->nom,
             $this->prenom,
             $this->matricule,
@@ -58,8 +56,6 @@ class Etudiant
             $this->email,
             $this->niveau,
             $this->montant,
-            $this->nom_parent,
-            $this->email_parent,
             $this->age,
             $this->montant_paye,
             $this->reste,
@@ -78,7 +74,6 @@ class Etudiant
                   VALUES (?, ?)";
 
         $stmt1 = $this->conn->prepare($query1);
-        // $hashedPassword = password_hash($this->matricule, PASSWORD_BCRYPT);
 
         // Vérifie si la requête a été préparée avec succès
         if (!$stmt1) {
@@ -88,10 +83,8 @@ class Etudiant
         // Liaison des paramètres
         $stmt1->bind_param(
             "ss",
-
             $this->matricule,
-            $this->matricule,
-
+            $this->matricule
         );
 
         // Exécute la requête et retourne le résultat
@@ -120,7 +113,7 @@ class Etudiant
     public function mettreAJourEtudiant()
     {
         $query = "UPDATE " . $this->table . " 
-                  SET nom = ?, prenom = ?, photo = ?, email = ?, niveau = ?, montant = ?, nom_parent = ?, email_parent = ?, age = ?
+                  SET nom = ?, prenom = ?, photo = ?, email = ?, niveau = ?, montant = ?, age = ?
                   WHERE matricule = ?";
 
         $stmt = $this->conn->prepare($query);
@@ -132,20 +125,33 @@ class Etudiant
 
         // Liaison des paramètres
         $stmt->bind_param(
-            "sssssdssis",
+            "sssssdss",
             $this->nom,
             $this->prenom,
             $this->photo,
             $this->email,
             $this->niveau,
             $this->montant,
-            $this->nom_parent,
-            $this->email_parent,
             $this->age,
             $this->matricule
         );
 
         // Exécution de la requête
+        return $stmt->execute();
+    }
+
+    public function getEtudiantById($id) {
+        $query = "SELECT * FROM etudiants WHERE id = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param('i', $id);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_assoc();
+    }
+
+    public function updateEtudiant($id, $nom, $prenom, $matricule, $email, $niveau, $date_naissance, $montant, $photo) {
+        $query = "UPDATE etudiants SET nom = ?, prenom = ?, matricule = ?, email = ?, niveau = ?, date_naissance = ?, montant = ?, photo = ? WHERE id = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param('sssssdssi', $nom, $prenom, $matricule, $email, $niveau, $date_naissance, $montant, $photo, $id);
         return $stmt->execute();
     }
 
@@ -195,6 +201,7 @@ class Etudiant
         }
         return null;
     }
+
     public function obtenirEtudiantParMatricule($matricule)
     {
         $query = "SELECT * FROM " . $this->table . " WHERE matricule = ?";
@@ -213,7 +220,6 @@ class Etudiant
     {
         $query = "SELECT * FROM connexion WHERE matricule = ? AND password = ?";
         $stmt = $this->conn->prepare($query);
-        // $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
         $stmt->bind_param("ss", $matricule, $password);
         $stmt->execute();
         $result = $stmt->get_result();

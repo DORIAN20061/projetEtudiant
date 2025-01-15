@@ -8,7 +8,8 @@ $etudiant = new Etudiant($db);
 
 // Recherche
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
-$etudiants = $etudiant->getAllEtudiants($search);
+$filter = isset($_GET['filter']) ? $_GET['filter'] : 'nom';
+$etudiants = $etudiant->getAllEtudiants($search, $filter);
 
 // Suppression
 $message = '';
@@ -31,6 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="bootstrap.css">
     <title>Liste des Étudiants</title>
     <style>
         .popup-overlay {
@@ -349,7 +351,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
             </div>
             <form method="GET" action="gestionEtu.php">
                 <input name="search" type="text" placeholder="Rechercher..." value="<?= htmlspecialchars($search); ?>">
-                <button type="submit">Rechercher</button>
+                <select name="filter">
+                    <option value="nom" <?= isset($_GET['filter']) && $_GET['filter'] == 'nom' ? 'selected' : ''; ?>>Nom</option>
+                    <option value="niveau" <?= isset($_GET['filter']) && $_GET['filter'] == 'niveau' ? 'selected' : ''; ?>>Niveau</option>
+                    <option value="matricule" <?= isset($_GET['filter']) && $_GET['filter'] == 'matricule' ? 'selected' : ''; ?>>Matricule</option>
+                </select>
+                <button type="submit"><i class="fas fa-filter"></i> Rechercher</button>
             </form>
         </div>
 

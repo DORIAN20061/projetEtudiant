@@ -35,8 +35,8 @@ class Etudiant
     // Méthode pour ajouter un étudiant
     public function ajouterEtudiant()
     {
-        $query = "INSERT INTO " . $this->table . " 
-                  (nom, prenom, matricule, photo, email, niveau, montant, age, montant_paye, reste, statut, date_naissance) 
+        $query = "INSERT INTO " . $this->table . "
+                  (nom, prenom, matricule, photo, email, niveau, montant, age, montant_paye, reste, statut, date_naissance)
                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         $stmt = $this->conn->prepare($query);
@@ -69,8 +69,8 @@ class Etudiant
 
     public function ajouterEtudiantCon()
     {
-        $query1 = "INSERT INTO " . "connexion" . " 
-                  (matricule, password) 
+        $query1 = "INSERT INTO " . "connexion" . "
+                  (matricule, password)
                   VALUES (?, ?)";
 
         $stmt1 = $this->conn->prepare($query1);
@@ -91,15 +91,36 @@ class Etudiant
         return $stmt1->execute();
     }
 
-    // Méthode pour récupérer tous les étudiants
-    public function getAllEtudiants()
+    // Méthode pour récupérer tous les étudiants avec filtrage
+    public function getAllEtudiants($search = '', $filter = 'nom')
     {
-        $query = "SELECT * FROM  " . $this->table;
-        $result = $this->conn->query($query);
+        $query = "SELECT * FROM " . $this->table . " WHERE 1=1";
 
-        if ($result === false) {
-            return [];
+        if (!empty($search)) {
+            switch ($filter) {
+                case 'nom':
+                    $query .= " AND nom LIKE ?";
+                    break;
+                case 'niveau':
+                    $query .= " AND niveau LIKE ?";
+                    break;
+                case 'matricule':
+                    $query .= " AND matricule LIKE ?";
+                    break;
+                default:
+                    $query .= " AND nom LIKE ?";
+            }
         }
+
+        $stmt = $this->conn->prepare($query);
+
+        if (!empty($search)) {
+            $search = "%$search%";
+            $stmt->bind_param('s', $search);
+        }
+
+        $stmt->execute();
+        $result = $stmt->get_result();
 
         $etudiants = [];
         while ($row = $result->fetch_assoc()) {
@@ -112,7 +133,7 @@ class Etudiant
     // Méthode pour mettre à jour un étudiant
     public function mettreAJourEtudiant()
     {
-        $query = "UPDATE " . $this->table . " 
+        $query = "UPDATE " . $this->table . "
                   SET nom = ?, prenom = ?, photo = ?, email = ?, niveau = ?, montant = ?, age = ?
                   WHERE matricule = ?";
 

@@ -10,7 +10,7 @@ $enseignant = new Enseignant($db);
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 $enseignants = $enseignant->getAllEtudiants($search);
 
-//Suppression
+// Suppression
 $message = '';
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
     $id = intval($_GET['delete_id']);
@@ -22,7 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
         $message = "Une erreur s'est produite lors de la suppression.";
     }
 }
-// 
 ?>
 
 <!DOCTYPE html>
@@ -86,65 +85,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
 
         body {
             font-family: 'Arial', sans-serif;
-            background-color:rgb(1, 1, 2);
+            background-color: rgb(1, 1, 2);
         }
 
-        /* Sidebar */
-        .sidebar {
+        /* Navbar */
+        .navbar {
             background-color: rgb(44, 25, 3);
             color: white;
-            height: 93vh;
-            position: fixed;
-            width: 145px;
-            padding: 20px;
-            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .sidebar h2 {
-            /* text-align: left;
-            margin-bottom: 10px; Réduit la marge */
+        .navbar a {
             text-decoration: none;
             color: white;
-            display: flex;
-            align-items: center;
-            margin: 10px 0;
+            margin: 0 15px;
             padding: 10px;
             border-radius: 5px;
         }
 
-        .sidebar a {
-            text-decoration: none;
-            color: white;
-            display: flex;
-            align-items: center;
-            margin: 10px 0;
-            padding: 10px;
-            border-radius: 5px;
-        }
-
-        .sidebar a:hover {
-            background-color:rgb(209, 142, 115);
+        .navbar a:hover {
+            background-color: rgb(209, 142, 115);
             transform: translateY(-10%);
             transition: ease-in-out .5s;
             box-shadow: 0 5px 15px rgba(245, 165, 90, 0.5);
         }
-        .sidebar a img {
+
+        .navbar a img {
             width: 20px;
             height: 20px;
             margin-right: 10px;
         }
 
-        .sidebar .etu {
-            background-color:rgb(87, 70, 64);
+        .navbar .etu {
+            background-color: rgb(87, 70, 64);
         }
-
 
         /* Content */
         .content {
-            margin-left: 170px;
-            margin-right: -20px;
+            margin: 20px;
             padding: 20px;
-            /* Ajuste la largeur pour s'adapter à la sidebar */
         }
 
         .header {
@@ -190,7 +172,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
             color: black;
             margin: 5px;
             padding: 9px 12px;
-            /* Réduit le padding */
             border: none;
             border-radius: 5px;
             cursor: pointer;
@@ -207,7 +188,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 10px;
-            /* Réduit la marge */
             background-color: #fff;
             border-radius: 10px;
         }
@@ -223,7 +203,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
         th,
         td {
             padding: 8px;
-            /* Réduit le padding */
             border: 1px solid #ddd;
             text-align: left;
         }
@@ -248,7 +227,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
 
         img {
             max-width: 50px;
-            /* Réduit la taille de l'image */
             max-height: 50px;
             object-fit: cover;
             border-radius: 50px;
@@ -259,14 +237,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
             max-width: 25px;
             max-height: 25px;
             justify-content: center;
-
         }
 
         .actions button {
             margin: .2px;
-            /* Réduit la marge */
             padding: 3px 6px;
-            /* Réduit le padding */
             border: none;
             border-radius: 5px;
             cursor: pointer;
@@ -295,11 +270,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
 
         .table-container a {
             text-decoration: none;
-            
         }
 
         .ajout {
-            background-color:rgb(22, 51, 75);
+            background-color: rgb(22, 51, 75);
             color: white;
             display: flex;
             align-items: center;
@@ -327,67 +301,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
             box-shadow: 0 5px 15px rgba(102, 166, 255, 0.5);
         }
 
-
-        .popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .popup-content {
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
-            max-width: 400px;
-            width: 90%;
-        }
-
-        .popup-content h3 {
-            margin: 0 0 10px;
-        }
-
-        .popup-content p {
-            margin: 0 0 20px;
-        }
-
-        .popup-actions button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            margin: 0 5px;
-        }
-
-        .popup-actions .cancel {
-            background: #f44336;
-            color: #fff;
-        }
-
-        .popup-actions .confirm {
-            background: #4CAF50;
-            color: #fff;
-        }
-
-        .popup-actions .cancel:hover {
-            background: #d32f2f;
-        }
-
-        .popup-actions .confirm:hover {
-            background: #388E3C;
-        }
-
         .haut {
-            
             padding: 10px;
         }
 
@@ -404,7 +318,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
 </head>
 
 <body>
-
     <?php if (!empty($message)): ?>
         <div class="popup-overlay" id="popup">
             <div class="popup-content">
@@ -416,27 +329,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
             </div>
         </div>
     <?php endif; ?>
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <h2>Menu</h2>
+
+    <!-- Navbar -->
+    <div class="navbar">
         <a href="gestionEtu.php"> <i class="fas fa-user-graduate"></i> Étudiants </a>
-        <a  href="gestionVer.php"><i class="fas fa-money-bill-wave"></i> Versements</a>
+        <a href="gestionVer.php"><i class="fas fa-money-bill-wave"></i> Versements</a>
         <a class="etu" href="gestionEnsei.php"><i class="fas fa-chalkboard-teacher"></i> Enseignant</a>
         <a href="statistiques.php"> <i class="fas fa-chart-bar"></i> Statistiques</a>
         <a href="gestionMati.php"> <i class="fas fa-book"></i>  Matieres</a>
         <a href="listeNote.php"> <i class="fas fa-graduation-cap"></i> Notes</a>
         <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
-
     </div>
 
     <!-- Main Content -->
     <div class="content">
         <div class="header">
             <div class="haut">
-
                 <h2>Liste des Enseignants</h2>
             </div>
-            <form method="GET" action="gestionEtu.php">
+            <form method="GET" action="gestionEnsei.php">
                 <input name="search" type="text" placeholder="Rechercher..." value="<?= htmlspecialchars($search); ?>">
                 <button type="submit">Rechercher</button>
             </form>
@@ -459,7 +370,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
                         <th>Email</th>
                         <th>Fonction</th>
                         <th>Date versement</th>
-
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -471,7 +381,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
                                 <td><?= htmlspecialchars($enseignant['matricule']); ?></td>
                                 <td><?= htmlspecialchars($enseignant['nom']); ?></td>
                                 <td><?= htmlspecialchars($enseignant['prenom']); ?></td>
-
                                 <td>
                                     <?php if (!empty($enseignant['photo'])): ?>
                                         <img src="<?= htmlspecialchars($enseignant['photo']); ?>" alt="Photo">
@@ -482,28 +391,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
                                 <td><?= htmlspecialchars($enseignant['email']); ?></td>
                                 <td><?= htmlspecialchars($enseignant['fonction']); ?></td>
                                 <td><?= htmlspecialchars($enseignant['date_enregistrement']); ?></td>
-
                                 <td class="actions">
                                     <button class="edit" onclick="location.href='edit.php?id=<?= $enseignant['id']; ?>'"><img src="uploads/write.png" alt=""></button>
                                     <button class="delete" onclick="openPopup(<?= $enseignant['id']; ?>)"><img src="uploads/delete.png" alt=""></button>
-                                    
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="12">Aucun étudiant trouvé.</td>
+                            <td colspan="12">Aucun enseignant trouvé.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
             </table>
         </div>
     </div>
+
     <!-- Popup -->
     <div id="popup" class="popup-overlay" style="display: none;">
         <div class="popup-content">
             <h3>Confirmation</h3>
-            <p>Êtes-vous sûr de vouloir supprimer cet étudiant ?</p>
+            <p>Êtes-vous sûr de vouloir supprimer cet enseignant ?</p>
             <div class="popup-actions">
                 <button class="cancel" onclick="closePopup()">Annuler</button>
                 <button class="confirm" id="confirm-delete">Confirmer</button>
@@ -521,12 +429,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
             };
         }
 
-        function closePopup() {
-            document.getElementById('popup').style.display = 'none';
-        }
-    </script>
-
-    <script>
         function closePopup() {
             document.getElementById('popup').style.display = 'none';
         }

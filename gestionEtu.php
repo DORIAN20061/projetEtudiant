@@ -8,7 +8,7 @@ $etudiant = new Etudiant($db);
 
 // Recherche
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
- $etudiants = $etudiant->getAllEtudiants($search);
+$etudiants = $etudiant->getAllEtudiants($search);
 
 // Suppression
 $message = '';
@@ -88,84 +88,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
             background-color: #191a1c;
         }
 
-       /* Hamburger Menu */
-.hamburger-menu {
-    display: block;
-    flex-direction: column;
-    cursor: pointer;
-    position: fixed;
-    top: 20px;
-    right: 1370px; /* Positionner à droite de la sidebar */
-    z-index: 1001;
-}
-
-.hamburger-menu .bar {
-    height: 3px;
-    width: 25px;
-    background-color: white;
-    margin: 4px 0;
-    transition: 0.4s;
-}
-
-/* Sidebar */
-.sidebar {
-    background-color: rgb(44, 25, 3);
-    color: white;
-    height: 93vh;
-    position: fixed;
-    width: 173px;
-    padding: -4px;
-    border-radius: -7px;
-    transition: transform 0.3s ease-in-out;
-    transform: translateX(-100%); /* Masquer par défaut */
-}
-
-.sidebar.visible {
-    transform: translateX(0); /* Afficher */
-}
-
-.sidebar h2 {
-    text-decoration: none;
-    color: white;
-    display: flex;
-    align-items: center;
-    margin: auto;
-    padding: 50px;
-    border-radius: 5px;
-}
-
-.sidebar a {
-    text-decoration: none;
-    color: white;
-    display: flex;
-    align-items: center;
-    margin: 10px 0;
-    padding: 10px;
-    border-radius: 20px;
-}
-
-.sidebar a:hover {
-    background-color:rgb(209, 142, 115);
-    transform: translateY(-10%);
-    transition: ease-in-out .5s;
-    box-shadow: 0 5px 15px rgba(245, 165, 90, 0.5);
-}
-
-.sidebar a img {
-    width: 20px;
-    height: 20px;
-    margin-right: 10px;
-}
-
-.sidebar .etu {
-            background-color:rgb(87, 70, 64);
+        /* Navbar */
+        .navbar {
+            background-color: rgb(44, 25, 3);
+            color: white;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
+        .navbar a {
+            text-decoration: none;
+            color: white;
+            margin: 0 15px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .navbar a:hover {
+            background-color: rgb(209, 142, 115);
+            transform: translateY(-10%);
+            transition: ease-in-out .5s;
+            box-shadow: 0 5px 15px rgba(245, 165, 90, 0.5);
+        }
+
+        .navbar a img {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+
+        .navbar .etu {
+            background-color: rgb(87, 70, 64);
+        }
 
         /* Content */
         .content {
-            margin-left: 170px;
-            margin-right: -20px;
+            margin: 20px;
             padding: 20px;
         }
 
@@ -370,16 +330,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
         </div>
     <?php endif; ?>
 
-    <!-- Hamburger Menu -->
-    <div class="hamburger-menu" onclick="toggleSidebar()">
-        <div class="bar"></div>
-        <div class="bar"></div>
-        <div class="bar"></div>
-    </div>
-
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <h2>Menu</h2>
+    <!-- Navbar -->
+    <div class="navbar">
         <a class="etu" href="gestionEtu.php"> <i class="fas fa-user-graduate"></i> Étudiants </a>
         <a href="gestionVer.php"><i class="fas fa-money-bill-wave"></i> Versements</a>
         <a href="gestionEnsei.php"><i class="fas fa-chalkboard-teacher"></i> Enseignant</a>
@@ -387,7 +339,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
         <a href="gestionMati.php"> <i class="fas fa-book"></i>  Matieres</a>
         <a href="listeNote.php"> <i class="fas fa-graduation-cap"></i> Notes</a>
         <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
-
     </div>
 
     <!-- Main Content -->
@@ -395,7 +346,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
         <div class="header">
             <div class="haut">
             <h2><i class="fa fa-users"></i> Liste des étudiants</h2>
-
             </div>
             <form method="GET" action="gestionEtu.php">
                 <input name="search" type="text" placeholder="Rechercher..." value="<?= htmlspecialchars($search); ?>">
@@ -486,11 +436,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
 
         function closePopup() {
             document.getElementById('popup').style.display = 'none';
-        }
-
-        function toggleSidebar() {
-            const sidebar = document.querySelector('.sidebar');
-            sidebar.classList.toggle('visible');
         }
     </script>
 </body>

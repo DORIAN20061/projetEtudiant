@@ -18,54 +18,46 @@
             overflow: hidden;
         }
 
-        .sidebar {
+        /* Navbar */
+        .navbar {
             background-color: rgb(44, 25, 3);
             color: white;
-            height: 100vh;
-            width: 250px;
-            padding: 20px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            transition: transform 0.3s ease-in-out;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .sidebar.hidden {
-            transform: translateX(-100%);
-        }
-
-        .sidebar h2 {
-            margin: 0 0 20px 0;
-            font-size: 1.5em;
-            text-align: center;
-        }
-
-        .sidebar a {
+        .navbar a {
             text-decoration: none;
             color: white;
-            display: flex;
-            align-items: center;
-            margin: 10px 0;
+            margin: 0 15px;
             padding: 10px;
             border-radius: 5px;
-            transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
-        .sidebar a:hover {
-            background-color: #6c83f7;
-            transform: translateY(-2px);
+        .navbar a:hover {
+            background-color: rgb(209, 142, 115);
+            transform: translateY(-10%);
+            transition: ease-in-out .5s;
+            box-shadow: 0 5px 15px rgba(245, 165, 90, 0.5);
         }
 
-        .sidebar .etu {
+        .navbar a img {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+
+        .navbar .etu {
             background-color: rgb(87, 70, 64);
         }
 
         .main-content {
-            margin-left: 250px;
+            margin: 20px;
             padding: 20px;
             height: 100%;
             overflow-y: auto;
-            transition: margin-left 0.3s ease-in-out;
         }
 
         .graph-container {
@@ -87,45 +79,12 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                height: auto;
-                text-align: center;
-                transform: translateY(-100%);
-            }
-
-            .main-content {
-                margin-left: 0;
-                padding: 10px;
-            }
-
-            .menu-toggle {
-                display: block;
-                position: fixed;
-                top: 15px;
-                left: 15px;
-                z-index: 2;
-                cursor: pointer;
-                font-size: 24px;
-                color: white;
-                transition: color 0.3s ease;
-            }
-
-            .menu-toggle:hover {
-                color: #6c83f7;
-            }
-        }
     </style>
 </head>
 
 <body>
-    <div class="menu-toggle">
-        <i class="fas fa-bars"></i>
-    </div>
-    <div class="sidebar">
-        <h2>Menu</h2>
+    <!-- Navbar -->
+    <div class="navbar">
         <a href="gestionEtu.php"> <i class="fas fa-user-graduate"></i> Étudiants </a>
         <a href="gestionVer.php"><i class="fas fa-money-bill-wave"></i> Versements</a>
         <a href="gestionEnsei.php"><i class="fas fa-chalkboard-teacher"></i> Enseignant</a>
@@ -141,12 +100,12 @@
             <div><canvas id="studentsByStatusChart"></canvas></div>
             <div><canvas id="paymentsByDayChart"></canvas></div>
             <div><canvas id="paymentsByMonthChart"></canvas></div>
-        </di>
-    </di>
+        </div>
+    </div>
 
     <?php
     // Connexion à la base de données
-    $mysqli = new mysqli('127.0.0.1', 'root', '', 'etudiants');
+    $mysqli = new mysqli('localhost', 'root', '', 'etudiants');
 
     if ($mysqli->connect_error) {
         die("Erreur de connexion : " . $mysqli->connect_error);
@@ -172,8 +131,8 @@
     </script>";
 
     // Montants par jour
-    $query = "SELECT DATE(date_versement) as day, SUM(montant) as total 
-              FROM versements 
+    $query = "SELECT DATE(date_versement) as day, SUM(montant) as total
+              FROM versements
               GROUP BY DATE(date_versement)";
     $result = $mysqli->query($query);
 
@@ -193,8 +152,8 @@
     </script>";
 
     // Montants par mois
-    $query = "SELECT DATE_FORMAT(date_versement, '%Y-%m') as month, SUM(montant) as total 
-              FROM versements 
+    $query = "SELECT DATE_FORMAT(date_versement, '%Y-%m') as month, SUM(montant) as total
+              FROM versements
               GROUP BY DATE_FORMAT(date_versement, '%Y-%m')";
     $result = $mysqli->query($query);
 
@@ -222,12 +181,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
-        $(document).ready(function () {
-            $('.menu-toggle').click(function () {
-                $('.sidebar').toggleClass('hidden');
-            });
-        });
-
         new Chart(document.getElementById('studentsByStatusChart').getContext('2d'), {
             type: 'pie',
             data: {

@@ -78,85 +78,55 @@ function calculateAverage($notes)
             margin: 0;
             font-family: Arial, sans-serif;
             display: flex;
+            flex-direction: column;
             min-height: 100vh;
-            background-color:rgb(7, 7, 14);
+            background-color: rgb(7, 7, 14);
         }
 
-        .sidebar {
+        /* Navbar */
+        .navbar {
             background-color: rgb(44, 25, 3);
             color: white;
-            width: 160px;
-            padding: 20px 10px;
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            height: 100vh;
-            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .sidebar h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-
-            .hamburger-menu {
-        display: block;
-        flex-direction: column;
-        cursor: pointer;
-        position: fixed;
-        top: 20px;
-        right: 1370px; /* Positionner à droite de la sidebar */
-        z-index: 1001;
-    }
-
-    .hamburger-menu .bar {
-        height: 3px;
-        width: 25px;
-        background-color: white;
-        margin: 4px 0;
-        transition: 0.4s;
-    }
- 
-        .sidebar a {
+        .navbar a {
             text-decoration: none;
             color: white;
-            display: flex;
-            align-items: center;
-            margin: 15px 0;
+            margin: 0 15px;
             padding: 10px;
-            border-radius: 66px;
-            transition: all 0.3s ease;
-        
+            border-radius: 5px;
         }
 
-        .sidebar a:hover {
-            background-color:rgb(209, 142, 115);
-            transform: scale(1.05);
+        .navbar a:hover {
+            background-color: rgb(209, 142, 115);
+            transform: translateY(-10%);
+            transition: ease-in-out .5s;
             box-shadow: 0 5px 15px rgba(245, 165, 90, 0.5);
         }
 
-        .sidebar a img {
+        .navbar a img {
             width: 20px;
             height: 20px;
             margin-right: 10px;
         }
 
-        .sidebar .etu {
-            background-color:rgb(87, 70, 64);
+        .navbar .etu {
+            background-color: rgb(87, 70, 64);
         }
 
         .main-content {
-            margin-left: 180px;
-            margin-top: 20px;
+            margin: 20px;
             padding: 20px;
-            width: calc(100% - 180px);
+            width: calc(100% - 40px);
             text-align: center;
         }
 
         .table-card {
             margin-bottom: 30px;
-            
         }
 
         .table-card h2 {
@@ -164,7 +134,7 @@ function calculateAverage($notes)
         }
 
         .send-notes-button {
-            background-color:rgb(27, 121, 228);
+            background-color: rgb(27, 121, 228);
             color: white;
             border: none;
             border-radius: 19px;
@@ -193,7 +163,7 @@ function calculateAverage($notes)
         }
 
         th {
-            background-color:rgb(24, 28, 34);
+            background-color: rgb(24, 28, 34);
             color: #fff;
         }
 
@@ -208,24 +178,18 @@ function calculateAverage($notes)
 </head>
 
 <body>
-     <!-- Hamburger Menu -->
-     <div class="hamburger-menu" onclick="toggleSidebar()">
-        <div class="bar"></div>
-        <div class="bar"></div>
-        <div class="bar"></div>
-    </div>
-    <div class="sidebar">
-        <h2>Menu</h2>
+    <!-- Navbar -->
+    <div class="navbar">
         <a href="gestionEtu.php"> <i class="fas fa-user-graduate"></i> Étudiants </a>
-        <a  href="gestionVer.php"><i class="fas fa-money-bill-wave"></i> Versements</a>
-        <a  href="gestionEnsei.php"><i class="fas fa-chalkboard-teacher"></i> Enseignant</a>
+        <a href="gestionVer.php"><i class="fas fa-money-bill-wave"></i> Versements</a>
+        <a href="gestionEnsei.php"><i class="fas fa-chalkboard-teacher"></i> Enseignant</a>
         <a href="statistiques.php"> <i class="fas fa-chart-bar"></i> Statistiques</a>
-        <a href="gestionMati.php"> <i class="fas fa-book"></i>  Matieres</a>
+        <a href="gestionMati.php"> <i class="fas fa-book"></i> Matieres</a>
         <a class="etu" href="listeNote.php"> <i class="fas fa-graduation-cap"></i> Notes</a>
         <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
     </div>
-    <main class="main-content">
 
+    <main class="main-content">
         <?php foreach ($classes as $classe): ?>
             <?php if (isset($notes[$classe]) && !empty($notes[$classe])): ?>
                 <div class="table-card">
@@ -262,9 +226,7 @@ function calculateAverage($notes)
                 <p>Aucune note disponible pour la classe <?php echo htmlspecialchars($classe); ?>.</p>
             <?php endif; ?>
         <?php endforeach; ?>
-
     </main>
-    
 </body>
 
 </html>

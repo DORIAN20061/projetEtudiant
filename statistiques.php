@@ -138,11 +138,11 @@
     <div class="main-content">
         <h1>Statistiques</h1>
         <div class="graph-container">
-            <canvas id="studentsByStatusChart"></canvas>
-            <canvas id="paymentsByDayChart"></canvas>
-            <canvas id="paymentsByMonthChart"></canvas>
-        </div>
-    </div>
+            <div><canvas id="studentsByStatusChart"></canvas></div>
+            <div><canvas id="paymentsByDayChart"></canvas></div>
+            <div><canvas id="paymentsByMonthChart"></canvas></div>
+        </di>
+    </di>
 
     <?php
     // Connexion à la base de données

@@ -42,7 +42,7 @@ if (!$enseignant) {
     die("Étudiant introuvable.");
 }
 
-$matricule1=htmlspecialchars($enseignant['matricule']);
+$matricule1 = htmlspecialchars($enseignant['matricule']);
 
 // Gestion de l'action pour télécharger le PDF
 if (isset($_GET['action']) && $_GET['action'] === 'download_pdf') {
@@ -91,7 +91,6 @@ if (isset($_GET['action']) && $_GET['action'] === 'download_pdf') {
     $pdf->SetX(70);
     $pdf->Cell(60, 10, 'Fonction: ' . $enseignant['fonction'], 0, 1);
 
-
     // Ajouter un pied de page
     $pdf->SetXY(10, 180);
     $pdf->SetFont('Arial', 'I', 10);
@@ -107,36 +106,87 @@ if (isset($_GET['action']) && $_GET['action'] === 'download_pdf') {
 }
 ?>
 
-
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Détails de l'Étudiant</title>
     <style>
+        :root {
+            --gradient-light: linear-gradient(135deg, #74ebd5, #ACB6E5);
+            --gradient-dark: linear-gradient(135deg, #1a1a1a, #2d3436);
+            --bg-light: #ffffff;
+            --bg-dark: #121212;
+            --text-light: #000000;
+            --text-dark: #ffffff;
+            --border-light: #ddd;
+            --border-dark: #333;
+            --shadow-light: rgba(0, 0, 0, 0.2);
+            --shadow-dark: rgba(0, 0, 0, 0.4);
+        }
+
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #74ebd5, #ACB6E5);
             margin: 0;
             padding: 20px;
             display: flex;
-            /* justify-content: center; */
             align-items: center;
             min-height: 50vh;
+            background: var(--gradient-light);
+            color: var(--text-light);
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode {
+            background: var(--gradient-dark);
+            color: var(--text-dark);
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--bg-light);
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 5px var(--shadow-light);
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode .theme-toggle {
+            background: var(--bg-dark);
+            color: var(--text-dark);
+            box-shadow: 0 2px 5px var(--shadow-dark);
         }
 
         .sidebar {
-            background: linear-gradient(#fff, #74ebd5, #fff);
-            color: black;
-            height: 745px;
+            background: linear-gradient(var(--bg-light), #74ebd5, var(--bg-light));
+            color: var(--text-light);
             width: 180px;
             padding: 20px;
             display: flex;
             flex-direction: column;
-            box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 5px 5px 5px var(--shadow-light);
             border-radius: 10px;
+            transition: all 0.3s ease;
+            position: fixed;
+            left: -200px; /* Caché par défaut */
+            top: 0;
+            z-index: 1000;
+            height: 100vh; /* Prend toute la hauteur de l'écran */
+        }
+
+        .sidebar.active {
+            left: 0; /* Afficher la sidebar */
+        }
+
+        .dark-mode .sidebar {
+            background: linear-gradient(var(--bg-dark), #2d3436, var(--bg-dark));
+            color: var(--text-dark);
+            box-shadow: 5px 5px 5px var(--shadow-dark);
         }
 
         .sidebar h2 {
@@ -147,38 +197,43 @@ if (isset($_GET['action']) && $_GET['action'] === 'download_pdf') {
 
         .sidebar a {
             text-decoration: none;
-            color: black;
+            color: inherit;
             display: flex;
             align-items: center;
             margin: 10px 0;
             padding: 10px;
             border-radius: 5px;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-
-        .sidebar a img {
-            width: 20px;
-            height: 20px;
-            margin-right: 10px;
+            transition: all 0.3s ease;
         }
 
         .sidebar a:hover {
-            background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+            background: var(--gradient-light);
             transform: translateY(-2px);
         }
 
-        .sidebar .etu {
-            background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+        .dark-mode .sidebar a:hover {
+            background: var(--gradient-dark);
+        }
+
+        .sidebar .logout {
+            margin-top: auto; /* Place la déconnexion en bas */
+            margin-bottom: 20px; /* Ajoute un peu d'espace en bas */
         }
 
         .container {
             max-width: 700px;
-            background: #ffffff;
+            background: var(--bg-light);
             padding: 20px;
             border-radius: 12px;
-            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0px 5px 15px var(--shadow-light);
             text-align: center;
             margin-left: 450px;
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode .container {
+            background: var(--bg-dark);
+            box-shadow: 0px 5px 15px var(--shadow-dark);
         }
 
         .student-photo {
@@ -187,11 +242,11 @@ if (isset($_GET['action']) && $_GET['action'] === 'download_pdf') {
             border-radius: 50%;
             object-fit: cover;
             margin: 0 auto 20px;
+            transition: all 0.3s ease;
         }
 
         .student-photo:hover {
             transform: translateY(-10%);
-            transition: ease-in-out .5s;
             box-shadow: 0 5px 15px rgba(102, 166, 255, 0.5);
         }
 
@@ -201,41 +256,44 @@ if (isset($_GET['action']) && $_GET['action'] === 'download_pdf') {
             border-collapse: collapse;
         }
 
-        th,
-        td {
+        th, td {
             padding: 10px;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid var(--border-light);
             text-align: left;
         }
 
-        th {
-            background: linear-gradient(135deg, #74ebd5, #ACB6E5);
-            color: white;
+        .dark-mode th, .dark-mode td {
+            border-bottom: 1px solid var(--border-dark);
         }
 
-        .back-link,
-        .pdf-link {
+        th {
+            background: var(--gradient-light);
+            color: var(--text-light);
+        }
+
+        .dark-mode th {
+            background: var(--gradient-dark);
+            color: var(--text-dark);
+        }
+
+        .back-link, .pdf-link {
             display: inline-block;
             margin-top: 20px;
             text-decoration: none;
             padding: 10px 20px;
             font-weight: bold;
             border-radius: 5px;
-            transition: background 0.3s;
+            transition: all 0.3s ease;
         }
 
         .back-link {
             background-color: wheat;
-            color: black;
-            border: 2px;
+            color: var(--text-light);
         }
 
-        .back-link:hover {
-            background: linear-gradient(135deg, #74ebd5, #ACB6E5);
-            color: white;
-            transform: translateY(-10%);
-            transition: ease-in-out .5s;
-            box-shadow: 0 5px 15px rgba(102, 166, 255, 0.5);
+        .dark-mode .back-link {
+            background-color: #2d3436;
+            color: var(--text-dark);
         }
 
         .pdf-link {
@@ -243,23 +301,79 @@ if (isset($_GET['action']) && $_GET['action'] === 'download_pdf') {
             color: white;
         }
 
-        .pdf-link:hover {
-            background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+        .dark-mode .pdf-link {
+            background-color: #2d5a30;
+        }
+
+        .back-link:hover, .pdf-link:hover {
+            background: var(--gradient-light);
             transform: translateY(-10%);
-            transition: ease-in-out .5s;
             box-shadow: 0 5px 15px rgba(102, 166, 255, 0.5);
+        }
+
+        .dark-mode .back-link:hover, .dark-mode .pdf-link:hover {
+            background: var(--gradient-dark);
+        }
+
+        .sidebar img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+
+        .hamburger {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            cursor: pointer;
+            background: var(--bg-light);
+            padding: 10px;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px var(--shadow-light);
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode .hamburger {
+            background: var(--bg-dark);
+            box-shadow: 0 2px 5px var(--shadow-dark);
+        }
+
+        .hamburger span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background: var(--text-light);
+            margin: 5px 0;
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode .hamburger span {
+            background: var(--text-dark);
         }
     </style>
 </head>
-
 <body>
+    <button class="theme-toggle" onclick="toggleDarkMode()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"/>
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+        </svg>
+    </button>
+
+    <div class="hamburger" onclick="toggleSidebar()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
 
     <div class="sidebar">
         <h2>Menu</h2>
-        <a class="etu" href="infoProf.php?matricule=<?= $enseignant['matricule']; ?>" $matricule1><img src="uploads/analytics.gif" alt="">Information</a>
+        <a class="etu" href="infoProf.php?matricule=<?= $enseignant['matricule']; ?>"><img src="uploads/analytics.gif" alt="">Information</a>
         <a href="MatiereProf.php?matricule=<?= $enseignant['matricule']; ?>"><img src="uploads/analytics.gif" alt="">Matieres</a>
-        <a href="logout.php">Déconnexion</a>
+        <a href="logout.php" class="logout"><img src="uploads/logout.gif" alt="">Déconnexion</a>
     </div>
+
     <div class="container">
         <h1>Détails du Professeur</h1>
         <img src="<?php echo htmlspecialchars($enseignant['photo']); ?>" alt="Photo de l'étudiant" class="student-photo">
@@ -284,12 +398,32 @@ if (isset($_GET['action']) && $_GET['action'] === 'download_pdf') {
                 <th>Fonction</th>
                 <td><?php echo htmlspecialchars($enseignant['fonction']); ?></td>
             </tr>
-
-
         </table>
         <a href="?matricule=<?= $enseignant['matricule']; ?>&action=download_pdf" class="pdf-link">Télécharger la carte</a>
-        <a href="gestionVer.php" class="back-link">Retour </a>
+        <a href="gestionVer.php" class="back-link">Retour</a>
     </div>
-</body>
 
+    <script>
+        // Gestion du mode sombre
+        const darkMode = localStorage.getItem('darkMode');
+        if (darkMode === 'enabled') {
+            document.body.classList.add('dark-mode');
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                localStorage.setItem('darkMode', null);
+            }
+        }
+
+        // Gestion du menu hamburger
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('active');
+        }
+    </script>
+</body>
 </html>

@@ -26,143 +26,153 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
 }
 ?>
 
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liste des Matieres</title>
     <style>
-        .popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .popup-content {
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
-            max-width: 400px;
-            width: 90%;
-            position: relative;
-        }
-
-        .popup-content h3 {
-            margin: 0 0 10px;
-        }
-
-        .popup-content p {
-            margin: 0 0 20px;
-        }
-
-        .popup-actions button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            margin: 0 5px;
-        }
-
-        .popup-actions .close {
-            background: #2196F3;
-            color: #fff;
-        }
-
-        .popup-actions .close:hover {
-            background: #1976D2;
+        :root {
+            --gradient-light: linear-gradient(135deg, #74ebd5, #ACB6E5);
+            --gradient-dark: linear-gradient(135deg, #1a1a1a, #2d3436);
+            --bg-light: #ffffff;
+            --bg-dark: #121212;
+            --text-light: #000000;
+            --text-dark: #ffffff;
+            --border-light: #ddd;
+            --border-dark: #333;
+            --shadow-light: rgba(0, 0, 0, 0.2);
+            --shadow-dark: rgba(0, 0, 0, 0.4);
         }
 
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #74ebd5, #ACB6E5);
-        }
-
-        /* Sidebar */
-        .sidebar {
-            background: linear-gradient(#fff, #74ebd5, #fff);
-            color: black;
-            height: 93vh;
-            position: fixed;
-            width: 145px;
+            margin: 0;
             padding: 20px;
-            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            min-height: 50vh;
+            background: var(--gradient-light);
+            color: var(--text-light);
+            transition: all 0.3s ease;
         }
 
-        .sidebar a img {
-            width: 20px;
-            height: 20px;
-            margin-right: 10px;
+        body.dark-mode {
+            background: var(--gradient-dark);
+            color: var(--text-dark);
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--bg-light);
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 5px var(--shadow-light);
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode .theme-toggle {
+            background: var(--bg-dark);
+            color: var(--text-dark);
+            box-shadow: 0 2px 5px var(--shadow-dark);
+        }
+
+        .sidebar {
+            background: linear-gradient(var(--bg-light), #74ebd5, var(--bg-light));
+            color: var(--text-light);
+            width: 180px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 5px 5px 5px var(--shadow-light);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            position: fixed;
+            left: -200px; /* Caché par défaut */
+            top: 0;
+            z-index: 1000;
+            height: 100vh; /* Prend toute la hauteur de l'écran */
+        }
+
+        .sidebar.active {
+            left: 0; /* Afficher la sidebar */
+        }
+
+        .dark-mode .sidebar {
+            background: linear-gradient(var(--bg-dark), #2d3436, var(--bg-dark));
+            color: var(--text-dark);
+            box-shadow: 5px 5px 5px var(--shadow-dark);
         }
 
         .sidebar h2 {
-            /* text-align: left;
-            margin-bottom: 10px; Réduit la marge */
-            text-decoration: none;
-            color: black;
-            display: flex;
-            align-items: center;
-            margin: 10px 0;
-            padding: 10px;
-            border-radius: 5px;
+            margin: 0 0 20px 0;
+            font-size: 1.5em;
+            text-align: center;
         }
 
         .sidebar a {
             text-decoration: none;
-            color: black;
+            color: inherit;
             display: flex;
             align-items: center;
             margin: 10px 0;
             padding: 10px;
             border-radius: 5px;
+            transition: all 0.3s ease;
         }
 
         .sidebar a:hover {
-            background: linear-gradient(135deg, #74ebd5, #ACB6E5);
-            transform: translateY(-10%);
-            transition: ease-in-out .5s;
-            box-shadow: 0 5px 15px rgba(102, 166, 255, 0.5);
+            background: var(--gradient-light);
+            transform: translateY(-2px);
         }
 
-        .sidebar .etu {
-            background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+        .dark-mode .sidebar a:hover {
+            background: var(--gradient-dark);
         }
 
-        /* Content */
+        .sidebar .logout {
+            margin-top: auto; /* Place la déconnexion en bas */
+            margin-bottom: 20px; /* Ajoute un peu d'espace en bas */
+        }
+
+        .sidebar img {
+            width: 20px; /* Taille réduite des images dans la sidebar */
+            height: 20px;
+            margin-right: 10px;
+        }
+
         .content {
             margin-left: 170px;
             margin-right: -20px;
             padding: 20px;
-            padding: 20px;
-            /* Ajuste la largeur pour s'adapter à la sidebar */
+            width: calc(100% - 170px);
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode .content {
+            background: var(--bg-dark);
+            color: var(--text-dark);
         }
 
         .header {
-            background-color: #fff;
+            background-color: var(--bg-light);
             padding: 15px;
-            border-bottom: 1px solid #eaeaea;
+            border-bottom: 1px solid var(--border-light);
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-radius: 10px;
         }
 
-        .header h2:hover {
-            transform: translateY(-10%);
-            transition: ease-in-out .5s;
-            box-shadow: 0 5px 15px rgba(102, 166, 255, 0.5);
+        .dark-mode .header {
+            background-color: var(--bg-dark);
+            border-bottom: 1px solid var(--border-dark);
         }
 
         .header h2 {
@@ -173,8 +183,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
         .header input {
             width: 300px;
             padding: 15px;
-            border: 1px solid #ccc;
+            border: 1px solid var(--border-light);
             border-radius: 5px;
+        }
+
+        .dark-mode .header input {
+            border: 1px solid var(--border-dark);
         }
 
         .header input:hover {
@@ -188,14 +202,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
         }
 
         .header button {
-            background-color: whitesmoke;
-            color: black;
+            background-color: var(--bg-light);
+            color: var(--text-light);
             margin: 5px;
             padding: 9px 12px;
-            /* Réduit le padding */
             border: none;
             border-radius: 5px;
             cursor: pointer;
+        }
+
+        .dark-mode .header button {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
         }
 
         .header button:hover {
@@ -209,29 +227,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 10px;
-            /* Réduit la marge */
-            background-color: #fff;
+            background-color: var(--bg-light);
             border-radius: 10px;
         }
 
-        .table-container {
-            margin-top: 20px;
-            background-color: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .table-container a {
-            text-decoration: none;
+        .dark-mode table {
+            background-color: var(--bg-dark);
         }
 
         th,
         td {
             padding: 8px;
-            /* Réduit le padding */
-            border: 1px solid #ddd;
+            border: 1px solid var(--border-light);
             text-align: left;
+        }
+
+        .dark-mode th,
+        .dark-mode td {
+            border: 1px solid var(--border-dark);
         }
 
         th {
@@ -243,223 +256,81 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
             background-color: #f2f2f2;
         }
 
+        .dark-mode tr:nth-child(even) {
+            background-color: #2d3436;
+        }
+
         tr:hover {
             background-color: #ddd;
         }
 
-        h1 {
-            text-align: center;
-            color: #2196F3;
+        .dark-mode tr:hover {
+            background-color: #333;
         }
 
-        img {
-            max-width: 50px;
-            /* Réduit la taille de l'image */
-            max-height: 50px;
-            object-fit: cover;
-            border-radius: 50px;
-            width: 100%;
-        }
-
-        .rien {
-            max-width: 25px;
-            max-height: 25px;
-            justify-content: center;
-
-        }
-
-        .actions button {
-            margin: .2px;
-            /* Réduit la marge */
-            padding: 3px 6px;
-            /* Réduit le padding */
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .actions button:hover {
-            transform: translateY(-10%);
-            transition: ease-in-out .5s;
-            box-shadow: 0 5px 15px rgba(102, 166, 255, 0.5);
-        }
-
-        .actions .edit {
-            background-color: whitesmoke;
-            color: white;
-        }
-
-        .actions .details {
-            background: linear-gradient(135deg, #74ebd5, #ACB6E5);
-            color: black;
-            margin: 10px;
-            padding: 10px;
-        }
-
-        .actions .delete {
-            background-color: whitesmoke;
-            color: white;
-        }
-
-        .ajout {
-            background-color: #2196F3;
-            color: white;
-            display: flex;
-            /* display: flex; */
-            align-items: center;
-            margin: 5px 0px;
-            padding: 12px 15px;
-            /* Réduit le padding */
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            justify-content: center;
-            position: relative;
-            text-decoration: none;
-        }
-
-        .ajout:hover {
-            background-color: #475be8;
-            transform: translateY(-10%);
-            transition: ease-in-out .5s;
-            box-shadow: 0 5px 15px rgba(102, 166, 255, 0.5);
-        }
-
-        .table-container .hover .ajout:hover {
-            background-color: #475be8;
-            transform: translateY(-10%);
-            transition: ease-in-out .5s;
-            box-shadow: 0 5px 15px rgba(102, 166, 255, 0.5);
-        }
-
-
-        .popup-overlay {
+        .hamburger {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .popup-content {
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
-            max-width: 400px;
-            width: 90%;
-        }
-
-        .popup-content h3 {
-            margin: 0 0 10px;
-        }
-
-        .popup-content p {
-            margin: 0 0 20px;
-        }
-
-        .popup-actions button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
             cursor: pointer;
-            margin: 0 5px;
-        }
-
-        .popup-actions .cancel {
-            background: #f44336;
-            color: #fff;
-        }
-
-        .popup-actions .confirm {
-            background: #4CAF50;
-            color: #fff;
-        }
-
-        .popup-actions .cancel:hover {
-            background: #d32f2f;
-        }
-
-        .popup-actions .confirm:hover {
-            background: #388E3C;
-        }
-
-        .haut {
-            /* justify-content: left; */
+            background: var(--bg-light);
             padding: 10px;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px var(--shadow-light);
+            transition: all 0.3s ease;
         }
 
-        .haut h2 {
-            text-decoration: none;
-            color: black;
-            display: flex;
-            align-items: center;
-            margin: 10px 0;
-            padding: 10px;
-            border-radius: 5px;
+        .dark-mode .hamburger {
+            background: var(--bg-dark);
+            box-shadow: 0 2px 5px var(--shadow-dark);
         }
 
-        .sidebar .etu {
-            background-color: #6c83f7;
+        .hamburger span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background: var(--text-light);
+            margin: 5px 0;
+            transition: all 0.3s ease;
         }
 
-        .logout {
-            background-color: #f44336;
-            /* Couleur rouge pour le bouton de déconnexion */
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-            border-radius: 28px;
-            font-size: 16px;
-            transition: background-color 0.3s;
+        .dark-mode .hamburger span {
+            background: var(--text-dark);
         }
 
-        .logout:hover {
-            background-color: #d32f2f;
-            /* Couleur plus foncée au survol */
+        .actions button img {
+            width: 16px; /* Taille réduite des icônes dans les boutons */
+            height: 16px;
         }
     </style>
 </head>
 
 <body>
+    <button class="theme-toggle" onclick="toggleDarkMode()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"/>
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+        </svg>
+    </button>
 
-    <?php if (!empty($message)): ?>
-        <div class="popup-overlay" id="popup">
-            <div class="popup-content">
-                <h3>Message</h3>
-                <p><?= htmlspecialchars($message); ?></p>
-                <div class="popup-actions">
-                    <button class="close" onclick="closePopup()">Fermer</button>
-                </div>
-            </div>
-        </div>
-    <?php endif; ?>
-    <!-- Sidebar -->
-    <!-- <div class="sidebar">
+    <div class="hamburger" onclick="toggleSidebar()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <div class="sidebar">
         <h2>Menu</h2>
-        <?php if (!empty($matieres)): ?>
         <a href="infoProf.php?matricule=<?= htmlspecialchars($matricule); ?>"><img src="uploads/analytics.gif" alt="">Information</a>
-        <?php endif; ?>
-        <?php if (!empty($matieres)): ?>
         <a class="etu" href="MatiereProf.php?matricule=<?= htmlspecialchars($matricule); ?>"><img src="uploads/analytics.gif" alt="">Matieres</a>
-        <?php endif; ?>
-        <a href="logout.php">Déconnexion</a>
-    </div> -->
+        <a href="logout.php" class="logout"><img src="uploads/logout.gif" alt="">Déconnexion</a>
+    </div>
 
-    <!-- Main Content -->
     <div class="content">
         <div class="header">
             <div class="haut">
                 <h2>Liste des Matieres</h2>
-
             </div>
             <form method="GET" action="gestionVer.php">
                 <input name="search" type="text" placeholder="Rechercher..." value="<?= htmlspecialchars($search); ?>">
@@ -500,7 +371,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
                                         <img src="uploads/delete.png" alt="Supprimer">
                                     </button>
                                     <button class="details" onclick="location.href='AjouterNotes.php?niveau=<?= $matiere['niveau_matiere']; ?>&&matiere=<?= $matiere['nom_matiere']; ?>'">
-                                        Ajouter Notes<!-- <img src="uploads/info.png" alt="Détails"> -->
+                                        Ajouter Notes
                                     </button>
                                 </td>
                             </tr>
@@ -514,21 +385,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
             </table>
         </div>
     </div>
-    <button class="logout" onclick="location.href='logout.php'">Déconnexion</button>
-
-    <!-- Popup -->
-    <div id="popup" class="popup-overlay" style="display: none;">
-        <div class="popup-content">
-            <h3>Confirmation</h3>
-            <p>Êtes-vous sûr de vouloir supprimer cet étudiant ?</p>
-            <div class="popup-actions">
-                <button class="cancel" onclick="closePopup()">Annuler</button>
-                <button class="confirm" id="confirm-delete">Confirmer</button>
-            </div>
-        </div>
-    </div>
 
     <script>
+        // Gestion du mode sombre
+        const darkMode = localStorage.getItem('darkMode');
+        if (darkMode === 'enabled') {
+            document.body.classList.add('dark-mode');
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                localStorage.setItem('darkMode', null);
+            }
+        }
+
+        // Gestion du menu hamburger
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        // Gestion de la popup de suppression
         function openPopup(deleteId) {
             const popup = document.getElementById('popup');
             popup.style.display = 'flex';
@@ -538,12 +418,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
             };
         }
 
-        function closePopup() {
-            document.getElementById('popup').style.display = 'none';
-        }
-    </script>
-
-    <script>
         function closePopup() {
             document.getElementById('popup').style.display = 'none';
         }

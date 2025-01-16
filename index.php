@@ -12,6 +12,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $matricule = trim($_POST['matricule'] ?? '');
     $password = trim($_POST['password'] ?? '');
 
+    // Vérifier les identifiants pour l'administrateur
+    if ($matricule === 'Admin' && $password === 'admin') {
+        header("Location: gestionEtu.php");
+        exit();
+    }
+
     // Vérifier les informations de connexion pour un étudiant
     $etudiant = $etudiantObj->verifierConnexion($matricule, $password);
     if ($etudiant) {

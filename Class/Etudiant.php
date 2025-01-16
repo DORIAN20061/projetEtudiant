@@ -25,6 +25,8 @@ class Etudiant
     public $montant_paye;
     public $statut;
     public $date_naissance;
+    public $nom_parent;
+    public $email_parent;
 
     // Constructeur : initialise la connexion à la base de données
     public function __construct($db)
@@ -67,11 +69,11 @@ class Etudiant
         return $stmt->execute();
     }
 
-    public function ajouterEtudiantCon()
+    public function ajouterEtudiantCon($statut,$matricule,$password)
     {
         $query1 = "INSERT INTO " . "connexion" . "
-                  (matricule, password)
-                  VALUES (?, ?)";
+                  (matricule, password, statut)
+                  VALUES (?, ?, ?)";
 
         $stmt1 = $this->conn->prepare($query1);
 
@@ -82,9 +84,10 @@ class Etudiant
 
         // Liaison des paramètres
         $stmt1->bind_param(
-            "ss",
-            $this->matricule,
-            $this->matricule
+            "sss",
+            $matricule,
+            $matricule,
+            $statut
         );
 
         // Exécute la requête et retourne le résultat

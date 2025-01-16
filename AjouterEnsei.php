@@ -1,13 +1,15 @@
 <?php
 require('fpdf.php');
-
+require('Class/Etudiant.php');
+require_once('Class/Database.php');
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 require 'Class/vendor/autoload.php';
-
+$db1 = new Database();   
+$db = $db1->getConnection();
 $message = '';
-
+$etudiant = new Etudiant($db);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nom = $_POST['nom'];
     $prenom = $_POST['prenom'];
@@ -16,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $photo = $_FILES['photo'];
 
     // Génération du matricule et du compte
-    $matricule = "ENS-" . date("YmdHis");
+    $matricule = "KIA-" . date("Ymd");
     $password = $matricule;
 
 
@@ -34,8 +36,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt = $mysqli->prepare("INSERT INTO enseignants (matricule, nom, prenom, photo, email, fonction) VALUES (?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("ssssss", $matricule, $nom, $prenom, $photoPath, $email, $fonction);
     $stmt1 = $mysqli->prepare("INSERT INTO connexion_prof (matricule, password) VALUES (?, ?)");
-    $stmt1->bind_param("ss", $matricule,$matricule);
+    $stmt1->bind_param("ss", $matricule, $matricule);
     if ($stmt->execute() && $stmt1->execute()) {
+        $etudiant->ajouterEtudiantCon("Professeur", $matricule, $matricule);
         // Générer la carte en PDF
         $message2 = generateTeacherCard($nom, $prenom, $matricule, $fonction, $photoPath, $email);
         $message = "Enseignant ajouté avec succès. ".$message2;

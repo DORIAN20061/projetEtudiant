@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <style>
         body {
             font-family: 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #56ccf2, #2f80ed);
+            background:linear-gradient(135deg, #ab601b, #0a0d10);
             display: flex;
             justify-content: center;
             align-items: center;

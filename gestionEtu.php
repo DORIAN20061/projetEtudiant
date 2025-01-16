@@ -356,7 +356,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_id'])) {
                     <option value="niveau" <?= isset($_GET['filter']) && $_GET['filter'] == 'niveau' ? 'selected' : ''; ?>>Niveau</option>
                     <option value="matricule" <?= isset($_GET['filter']) && $_GET['filter'] == 'matricule' ? 'selected' : ''; ?>>Matricule</option>
                 </select>
-                <button type="submit"><i class="fas fa-filter"></i> Rechercher</button>
+                <button type="submit"><i class="fas fa-filter"></i></button>
             </form>
         </div>
 

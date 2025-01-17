@@ -38,8 +38,8 @@ class Etudiant
     public function ajouterEtudiant()
     {
         $query = "INSERT INTO " . $this->table . "
-                  (nom, prenom, matricule, photo, email, niveau, montant, age, montant_paye, reste, statut, date_naissance)
-                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                  (nom, prenom, matricule, photo, email, niveau, montant, age, montant_paye, reste, statut, date_naissance, nom_parent)
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         $stmt = $this->conn->prepare($query);
 
@@ -50,7 +50,7 @@ class Etudiant
 
         // Liaison des paramètres
         $stmt->bind_param(
-            "ssssssdiddss",
+            "ssssssdiddsss",
             $this->nom,
             $this->prenom,
             $this->matricule,
@@ -62,7 +62,8 @@ class Etudiant
             $this->montant_paye,
             $this->reste,
             $this->statut,
-            $this->date_naissance
+            $this->date_naissance,
+            $this->nom_parent
         );
 
         // Exécute la requête et retourne le résultat

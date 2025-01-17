@@ -3,10 +3,29 @@ require_once 'Class/Database.php';
 require_once 'Class/Enseignant.php';
 require 'fpdf.php'; // Inclure la bibliothèque FPDF
 
-// Fonction pour convertir une image PNG en 8 bits
-function convertTo8Bit($source, $destination)
-{
-    $image = imagecreatefrompng($source);
+// Fonction pour convertir une image en 8 bits (supporte PNG et JPEG)
+function convertTo8Bit($source, $destination) {
+    // Vérifier le type de fichier
+    $imageInfo = getimagesize($source);
+    if ($imageInfo === false) {
+        die("Impossible de déterminer le type de fichier.");
+    }
+
+    $mimeType = $imageInfo['mime'];
+
+    // Charger l'image en fonction de son type
+    switch ($mimeType) {
+        case 'image/png':
+            $image = imagecreatefrompng($source);
+            break;
+        case 'image/jpeg':
+        case 'image/jpg':
+            $image = imagecreatefromjpeg($source);
+            break;
+        default:
+            die("Format d'image non supporté.");
+    }
+
     if ($image === false) {
         die("Impossible de charger l'image.");
     }
@@ -19,8 +38,11 @@ function convertTo8Bit($source, $destination)
 
     // Convertir en 8 bits
     imagetruecolortopalette($newImage, false, 256);
+
+    // Enregistrer l'image convertie
     imagepng($newImage, $destination);
 
+    // Libérer la mémoire
     imagedestroy($image);
     imagedestroy($newImage);
 }
@@ -64,7 +86,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'download_pdf') {
     $pdf->Ln(10);
 
     // Ajouter un logo (optionnel, si vous avez un fichier logo.png dans le dossier)
-    $logoPath = 'logo.png';
+    $logoPath = 'keyce.jpg';
     if (file_exists($logoPath)) {
         $pdf->Image($logoPath, 10, 10, 30, 30);
     }
@@ -112,9 +134,11 @@ if (isset($_GET['action']) && $_GET['action'] === 'download_pdf') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Détails de l'Étudiant</title>
+    <!-- Ajouter Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root {
-            --gradient-light: linear-gradient(135deg, #74ebd5, #ACB6E5);
+            --gradient-light: linear-gradient(135deg, rgb(183, 194, 192), #ACB6E5);
             --gradient-dark: linear-gradient(135deg, #1a1a1a, #2d3436);
             --bg-light: #ffffff;
             --bg-dark: #121212;
@@ -163,7 +187,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'download_pdf') {
         }
 
         .sidebar {
-            background: linear-gradient(var(--bg-light), #74ebd5, var(--bg-light));
+            background: linear-gradient(var(--bg-light), rgb(145, 152, 151), var(--bg-light));
             color: var(--text-light);
             width: 180px;
             padding: 20px;
@@ -202,7 +226,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'download_pdf') {
             align-items: center;
             margin: 10px 0;
             padding: 10px;
-            border-radius: 5px;
+            border-radius: 20px;
             transition: all 0.3s ease;
         }
 
@@ -217,17 +241,17 @@ if (isset($_GET['action']) && $_GET['action'] === 'download_pdf') {
 
         .sidebar .logout {
             margin-top: auto; /* Place la déconnexion en bas */
-            margin-bottom: 20px; /* Ajoute un peu d'espace en bas */
+            margin-bottom: 17px; /* Ajoute un peu d'espace en bas */
         }
 
         .container {
             max-width: 700px;
             background: var(--bg-light);
-            padding: 20px;
+            padding: 86px;
             border-radius: 12px;
             box-shadow: 0px 5px 15px var(--shadow-light);
             text-align: center;
-            margin-left: 450px;
+            margin-left: 675px;
             transition: all 0.3s ease;
         }
 
@@ -239,7 +263,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'download_pdf') {
         .student-photo {
             width: 150px;
             height: 150px;
-            border-radius: 50%;
+            border-radius: 10%;
             object-fit: cover;
             margin: 0 auto 20px;
             transition: all 0.3s ease;
@@ -282,7 +306,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'download_pdf') {
             text-decoration: none;
             padding: 10px 20px;
             font-weight: bold;
-            border-radius: 5px;
+            border-radius: 20px;
             transition: all 0.3s ease;
         }
 
@@ -316,9 +340,9 @@ if (isset($_GET['action']) && $_GET['action'] === 'download_pdf') {
         }
 
         .sidebar img {
-            width: 24px;
-            height: 24px;
-            margin-right: 10px;
+            width: 33px;
+            height: 38px;
+            margin-right: 18px;
         }
 
         .hamburger {
@@ -369,14 +393,20 @@ if (isset($_GET['action']) && $_GET['action'] === 'download_pdf') {
 
     <div class="sidebar">
         <h2>Menu</h2>
-        <a class="etu" href="infoProf.php?matricule=<?= $enseignant['matricule']; ?>"><img src="uploads/analytics.gif" alt="">Information</a>
-        <a href="MatiereProf.php?matricule=<?= $enseignant['matricule']; ?>"><img src="uploads/analytics.gif" alt="">Matieres</a>
-        <a href="logout.php" class="logout"><img src="uploads/logout.gif" alt="">Déconnexion</a>
+        <a class="etu" href="infoProf.php?matricule=<?= $enseignant['matricule']; ?>">
+            <i class="fas fa-info-circle"></i> Information
+        </a>
+        <a href="MatiereProf.php?matricule=<?= $enseignant['matricule']; ?>">
+            <i class="fas fa-book"></i> Matières
+        </a>
+        <a href="logout.php" class="logout">
+            <i class="fas fa-sign-out-alt"></i> Déconnexion
+        </a>
     </div>
 
     <div class="container">
         <h1>Détails du Professeur</h1>
-        <img src="<?php echo htmlspecialchars($enseignant['photo']); ?>" alt="Photo de l'étudiant" class="student-photo">
+        <img src="<?php echo htmlspecialchars($enseignant['photo']); ?>" alt="Photo de l'enseignant" class="student-photo">
         <table>
             <tr>
                 <th>Nom</th>
@@ -400,7 +430,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'download_pdf') {
             </tr>
         </table>
         <a href="?matricule=<?= $enseignant['matricule']; ?>&action=download_pdf" class="pdf-link">Télécharger la carte</a>
-        <a href="gestionVer.php" class="back-link">Retour</a>
+        <!-- <a href="gestionVer.php" class="back-link">Retour</a> -->
     </div>
 
     <script>

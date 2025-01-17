@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : jeu. 09 jan. 2025 à 11:08
+-- Généré le : jeu. 16 jan. 2025 à 20:59
 -- Version du serveur : 9.1.0
 -- Version de PHP : 8.3.14
 
@@ -92,20 +92,23 @@ CREATE TABLE IF NOT EXISTS `b3` (
   `prenom` varchar(100) NOT NULL,
   `Ui_design` varchar(60) DEFAULT '0',
   `Ui_design_CC` varchar(60) DEFAULT '0',
+  `php_orienter_objet` varchar(60) DEFAULT '0',
+  `php_orienter_objet_CC` varchar(60) DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `b3`
 --
 
-INSERT INTO `b3` (`id`, `matricule`, `nom`, `prenom`, `Ui_design`, `Ui_design_CC`) VALUES
-(3, '2024B3001', 'BABA', 'Victor', '0', '0'),
-(4, '2024B3001', 'tamar', 'ondoa', '0', '0'),
-(5, '2024B3001', 'MATANGA', 'BROOKLYN', '0', '0'),
-(6, '2024B3001', 'MATANGA', 'BROOKLYN', '0', '0'),
-(7, '2025B3002', 'SESINE', 'MAXIME', '0', '0'),
-(8, '2025B3002', 'NExu', 'anas', '0', '0');
+INSERT INTO `b3` (`id`, `matricule`, `nom`, `prenom`, `Ui_design`, `Ui_design_CC`, `php_orienter_objet`, `php_orienter_objet_CC`) VALUES
+(3, '2024B3001', 'BABA', 'Victor', '0', '0', '11', '20'),
+(4, '2024B3001', 'tamar', 'ondoa', '0', '0', '13', '12'),
+(5, '2024B3001', 'MATANGA', 'BROOKLYN', '0', '0', '0', '0'),
+(6, '2024B3001', 'MATANGA', 'BROOKLYN', '0', '0', '0', '0'),
+(7, '2025B3002', 'SESINE', 'MAXIME', '0', '0', '0', '0'),
+(8, '2025B3002', 'NExu', 'anas', '0', '0', '0', '0'),
+(9, '2025B3003', 'hgjilhjklm', 'ghjkgoij', '0', '0', '0', '0');
 
 -- --------------------------------------------------------
 
@@ -116,25 +119,20 @@ INSERT INTO `b3` (`id`, `matricule`, `nom`, `prenom`, `Ui_design`, `Ui_design_CC
 DROP TABLE IF EXISTS `connexion`;
 CREATE TABLE IF NOT EXISTS `connexion` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `matricule` varchar(50) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `etudiant_id` int DEFAULT NULL,
-  `statut` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `matricule` (`matricule`),
-  KEY `etudiant_id` (`etudiant_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `matricule` varchar(20) NOT NULL,
+  `password` varchar(100) NOT NULL,
+  `statut` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `connexion`
 --
 
-INSERT INTO `connexion` (`id`, `matricule`, `password`, `etudiant_id`, `statut`) VALUES
-(91, '2024B1002', 'forever', NULL, NULL),
-(95, '2025B3002', 'ADMIN', NULL, NULL),
-(96, '2025B1003', '2025B1003', NULL, NULL),
-(97, '2025B2002', '2025B2002', NULL, NULL),
-(99, '2025B1004', '2025B1004', NULL, NULL);
+INSERT INTO `connexion` (`id`, `matricule`, `password`, `statut`) VALUES
+(1, 'KIA-20250116', 'keyce', 'Professeur'),
+(2, '2025B3003', 'keyce', 'Etudiant'),
+(3, 'Admin', 'admin', 'Admin');
 
 -- --------------------------------------------------------
 
@@ -149,7 +147,7 @@ CREATE TABLE IF NOT EXISTS `connexion_prof` (
   `password` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `matricule` (`matricule`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `connexion_prof`
@@ -163,7 +161,8 @@ INSERT INTO `connexion_prof` (`id`, `matricule`, `password`) VALUES
 (6, 'ENS-20241231130512', 'ENS-20241231130512'),
 (7, 'ENS-20241231131058', 'ENS-20241231131058'),
 (8, 'ENS-20241231131324', 'ENS-20241231131324'),
-(9, 'ENS-20250103033931', 'ENS-20250103033931');
+(9, 'ENS-20250103033931', 'ENS-20250103033931'),
+(10, 'KIA-20250116', 'KIA-20250116');
 
 -- --------------------------------------------------------
 
@@ -183,7 +182,7 @@ CREATE TABLE IF NOT EXISTS `enseignants` (
   `date_enregistrement` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `matricule` (`matricule`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `enseignants`
@@ -193,7 +192,8 @@ INSERT INTO `enseignants` (`id`, `matricule`, `nom`, `prenom`, `photo`, `email`,
 (26, 'ENS-20241230145837', 'tamar', 'ondoa', 'uploads/ENS-20241230145837_ENS-20241223092132_converted_k_logo.png', 'dorianbat8@gmail.com', 'stagière', '2024-12-30 15:58:37'),
 (27, 'ENS-20241231130512', 'TIK NDENGUE', 'TENE', 'uploads/ENS-20241231130512_2436828d-23a0-4601-8427-0b0c753cb310.jpg', 'tenetik@gmail.com', 'Développeur web', '2024-12-31 14:05:12'),
 (29, 'ENS-20241231131324', 'NZENGUEM', 'TORSADE', 'uploads/ENS-20241231131324_29a28982-66e6-41de-84c1-dd81fa002af4.jpg', 'dorianbat8@gmail.com', 'TIK TOKEUR', '2024-12-31 14:13:24'),
-(30, 'ENS-20250103033931', 'FOMEKONG', 'Paya', 'uploads/ENS-20250103033931_Hacker хакер 駭客 هکر हैकर 해커 (1).jpg', 'dorianbat8@gmail.com', 'Développeur mobile', '2025-01-03 04:39:31');
+(30, 'ENS-20250103033931', 'FOMEKONG', 'Paya', 'uploads/ENS-20250103033931_Hacker хакер 駭客 هکر हैकर 해커 (1).jpg', 'dorianbat8@gmail.com', 'Développeur mobile', '2025-01-03 04:39:31'),
+(31, 'KIA-20250116', 'dszfqkjewewwe', 'wwewewwew', 'uploads/KIA-20250116_#pinterest #wallpaper #colors #aestetic #brightwallpaper #followme #likeme #fashionable #wonderfull (1).jpg', 'dorianbat8@gmail.com', 'qewgfew', '2025-01-16 14:36:21');
 
 -- --------------------------------------------------------
 
@@ -219,7 +219,7 @@ CREATE TABLE IF NOT EXISTS `etudiants` (
   `statut` varchar(20) DEFAULT NULL,
   `date_naissance` date DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `etudiants`
@@ -231,7 +231,8 @@ INSERT INTO `etudiants` (`id`, `nom`, `prenom`, `matricule`, `photo`, `email`, `
 (96, 'YOPA', 'DORIAN', '2025B1003', 'Anonymous.jpg', 'dorianbat8@gmail.com', 'B1', 300000.00, 'PAPADORIAN', 'dorianbat8@gmail.com', 21, 700000, 300000, 'En cours', '2003-11-01'),
 (97, 'brooklyn', 'frances', '2025B2002', 'ENS-20241223091827_converted_k_logo.png', 'matangabrooklyn@gmail.com', 'B2', -446900.00, 'yiyi', 'matangabrooklyn@gmail.com', 19, 3670350, -1670350, 'Solvable', '0000-00-00'),
 (98, 'NExu', 'anas', '2025B3002', 'ENS-20241216174701_ENS-20241216173927_graduated (1).png', 'batodorian3@gmail.com', 'B3', 3000000.00, 'papnexus', 'papanexus@gmail.com', 23, 0, 2000000, 'Insolvable', '2001-12-24'),
-(99, 'NExu', 'anas', '2025B1004', 'ENS-20241216174701_ENS-20241216173927_graduated (1).png', 'batodorian3@gmail.com', 'B1', 1000000.00, 'papnexus', 'papanexus@gmail.com', 0, 0, 1000000, 'Insolvable', '2001-12-24');
+(99, 'NExu', 'anas', '2025B1004', 'ENS-20241216174701_ENS-20241216173927_graduated (1).png', 'batodorian3@gmail.com', 'B1', -234567.00, 'papnexus', 'papanexus@gmail.com', 0, 2469134, -1469134, 'Solvable', '2001-12-24'),
+(100, 'hgjilhjklm', 'ghjkgoij', '2025B3003', 'Ninja skull illustration for t shirt design or game logo.jpg', 'dorianbat8@gmail.com', 'B3', 3000000.00, '', '', 24, 0, 2000000, 'Insolvable', '2000-08-07');
 
 -- --------------------------------------------------------
 
@@ -247,7 +248,7 @@ CREATE TABLE IF NOT EXISTS `matieres` (
   `nom_matiere` varchar(100) NOT NULL,
   `niveau_matiere` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `matieres`
@@ -257,7 +258,8 @@ INSERT INTO `matieres` (`id`, `matricule_prof`, `nom_prof`, `nom_matiere`, `nive
 (19, 'ENS-20241227233306', 'Fomekong Evariste', 'philosophie', 'B1'),
 (20, 'ENS-20241231130512', 'TIK NDENGUE TENE', 'UX/UI_Design', 'B3'),
 (21, 'ENS-20241231130512', 'TIK NDENGUE TENE', 'Ui_design', 'B3'),
-(22, 'ENS-20241231131324', 'NZENGUEM TORSADE', 'Tournage', 'B1');
+(22, 'ENS-20241231131324', 'NZENGUEM TORSADE', 'Tournage', 'B1'),
+(24, 'KIA-20250116', 'dszfqkjewewwe wwewewwew', 'php_orienter_objet', 'B3');
 
 -- --------------------------------------------------------
 
@@ -296,7 +298,7 @@ CREATE TABLE IF NOT EXISTS `versements` (
   `date_versement` date DEFAULT NULL,
   `numero_versement` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `versements`
@@ -309,17 +311,9 @@ INSERT INTO `versements` (`id`, `matricule`, `montant`, `date_versement`, `numer
 (43, '2025B1003', 700000, '2025-01-03', '250103V0004'),
 (44, '2025B2002', 1223450, '2025-01-03', '250103V0005'),
 (45, '2025B2002', 1223450, '2025-01-03', '250103V0005'),
-(46, '2025B2002', 1223450, '2025-01-03', '250103V0005');
-
---
--- Contraintes pour les tables déchargées
---
-
---
--- Contraintes pour la table `connexion`
---
-ALTER TABLE `connexion`
-  ADD CONSTRAINT `connexion_ibfk_1` FOREIGN KEY (`etudiant_id`) REFERENCES `etudiants` (`id`);
+(46, '2025B2002', 1223450, '2025-01-03', '250103V0005'),
+(47, '2025B1004', 1234567, '2025-01-15', '250115V0008'),
+(48, '2025B1004', 1234567, '2025-01-15', '250115V0009');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

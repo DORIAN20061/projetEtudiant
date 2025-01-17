@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-theme="light">
 
 <head>
     <meta charset="UTF-8">
@@ -48,18 +48,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
+        /* Variables de thème */
+        :root[data-theme="light"] {
+            --bg-gradient-1: #6dd5fa;
+            --bg-gradient-2: #2980b9;
+            --container-bg: #ffffff;
+            --text-color: #333333;
+            --table-header-bg: #4CAF50;
+            --table-header-color: white;
+            --table-row-even: #f2f2f2;
+            --table-row-hover: #d1ecf1;
+            --input-bg: #ffffff;
+            --input-text: #333333;
+            --btn-primary-bg: #007bff;
+            --btn-primary-hover: #0056b3;
+            --popup-bg: #ffffff;
+            --popup-overlay: rgba(0, 0, 0, 0.5);
+            --success-btn-bg: #28a745;
+            --success-btn-hover: #218838;
+        }
+
+        :root[data-theme="dark"] {
+            --bg-gradient-1: #2c3e50;
+            --bg-gradient-2: #1a1a1a;
+            --container-bg: #2c3e50;
+            --text-color: #ffffff;
+            --table-header-bg: #1a1a1a;
+            --table-header-color: #ffffff;
+            --table-row-even: #34495e;
+            --table-row-hover: #3498db;
+            --input-bg: #34495e;
+            --input-text: #ffffff;
+            --btn-primary-bg: #3498db;
+            --btn-primary-hover: #2980b9;
+            --popup-bg: #2c3e50;
+            --popup-overlay: rgba(0, 0, 0, 0.7);
+            --success-btn-bg: #2ecc71;
+            --success-btn-hover: #27ae60;
+        }
+
         body {
             font-family: 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #6dd5fa, #2980b9);
+            background: linear-gradient(135deg, var(--bg-gradient-1), var(--bg-gradient-2));
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             margin: 0;
+            color: var(--text-color);
+            transition: all 0.3s ease;
         }
 
         .container {
-            background: #ffffff;
+            background: var(--container-bg);
             padding: 20px 30px;
             border-radius: 12px;
             box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.15);
@@ -68,25 +109,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         table th {
-            background-color: #4CAF50;
-            color: white;
+            background-color: var(--table-header-bg);
+            color: var(--table-header-color);
         }
 
         table tr:nth-child(even) {
-            background-color: #f2f2f2;
+            background-color: var(--table-row-even);
         }
 
         table tr:hover {
-            background-color: #d1ecf1;
+            background-color: var(--table-row-hover);
+        }
+
+        .form-control {
+            background-color: var(--input-bg);
+            color: var(--input-text);
+            border-color: var(--text-color);
+        }
+
+        .form-control:focus {
+            background-color: var(--input-bg);
+            color: var(--input-text);
         }
 
         .btn-primary {
-            background-color: #007bff;
+            background-color: var(--btn-primary-bg);
             border: none;
         }
 
         .btn-primary:hover {
-            background-color: #0056b3;
+            background-color: var(--btn-primary-hover);
         }
 
         .popup-overlay {
@@ -95,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: var(--popup-overlay);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -103,13 +155,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         .popup-content {
-            background: #fff;
+            background: var(--popup-bg);
             padding: 20px;
             border-radius: 10px;
             text-align: center;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             max-width: 400px;
             width: 90%;
+            color: var(--text-color);
         }
 
         .popup-content h3 {
@@ -120,18 +173,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
-            background-color: #28a745;
+            background-color: var(--success-btn-bg);
             color: #fff;
             cursor: pointer;
         }
 
         .popup-actions button:hover {
-            background-color: #218838;
+            background-color: var(--success-btn-hover);
+        }
+
+        /* Style du bouton de thème */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: var(--container-bg);
+            border: 2px solid var(--text-color);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .theme-toggle i {
+            font-size: 20px;
+            transition: transform 0.5s ease;
+        }
+
+        /* Styles pour les inputs en mode sombre */
+        [data-theme="dark"] .form-control::placeholder {
+            color: #ffffff80;
+        }
+
+        [data-theme="dark"] .table {
+            color: var(--text-color);
         }
     </style>
 </head>
 
 <body>
+    <!-- Bouton de thème -->
+    <button id="themeToggle" class="theme-toggle" aria-label="Changer le thème">
+        <i class="fas fa-sun"></i>
+    </button>
+
     <div class="container">
         <h1 class="text-center mb-4">
             <i class="fas fa-edit"></i> Ajouter des Notes en <?= str_replace('_',' ',htmlspecialchars($matiere)); ?>
@@ -196,8 +292,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Close popup script -->
+    
+    <!-- Scripts pour le thème et le popup -->
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.getElementById('themeToggle');
+            const html = document.documentElement;
+            const icon = themeToggle.querySelector('i');
+
+            // Vérifier le thème sauvegardé
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            html.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+
+            themeToggle.addEventListener('click', function() {
+                const currentTheme = html.getAttribute('data-theme');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                
+                html.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                updateThemeIcon(newTheme);
+
+                // Animation de rotation
+                icon.style.transform = `rotate(${newTheme === 'dark' ? '360deg' : '0deg'})`;
+            });
+
+            function updateThemeIcon(theme) {
+                icon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+            }
+        });
+
         function closePopup() {
             const popup = document.getElementById('popup');
             popup.style.display = 'none';

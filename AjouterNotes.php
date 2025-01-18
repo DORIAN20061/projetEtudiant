@@ -240,7 +240,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <th><i class="fas fa-id-badge"></i> Matricule</th>
                             <th><i class="fas fa-user"></i> Nom</th>
                             <th><i class="fas fa-user"></i> Prénom</th>
-                            <th><i class="fas fa-pen"></i> Ajouter une Note / 20</th>
+                            <th><i class="fas fa-pen"></i> Ajouter une Note SN / 20</th>
                             <th><i class="fas fa-pen"></i> Ajouter une Note CC / 20</th>
                         </tr>
                     </thead>
